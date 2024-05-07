@@ -56,7 +56,7 @@ int main(void) {
 
   for (i = 0; i < N; i++) {
     Data[i] = List[list_minimum(List, &head)].key;
-    list_delete(List, &head, i);
+    list_delete(List, &head, list_minimum(List, &head));
   }
 
   for (i = 0; i < N; i++) {
@@ -128,7 +128,7 @@ int list_maximum(struct cell *L, int *head) {
   int y;
   y = x;
   int max = -2147483648;
-  while (L[x].key == -1) {
+  while (x == -1) {
     if (L[x].key > max) {
       max = L[x].key;
       y = x;
@@ -144,7 +144,7 @@ int list_minimum(struct cell *L, int *head) {
   int y;
   y = x;
   int min = 2147483647;
-  while (L[x].key == -1) {
+  while (x == -1) {
     if (L[x].key < min) {
       min = L[x].key;
       y = x;
