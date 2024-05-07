@@ -104,11 +104,24 @@ int list_search(struct cell *L, int *head, int *a) {
 }
 
 void list_delete(struct cell *L, int *head, int x) {
-  int i, y;
-  for (i = 0; L[i].next != x; i++) {
-    y = i;
+  int prev = -1;
+  int current = *head;
+
+  // 削除対象のノードを探索
+  while (current != -1 && current != x) {
+    prev = current;
+    current = L[current].next;
   }
-  L[y].next = L[x].next;
+
+  // 削除対象のノードが見つかった場合
+  if (current == x) {
+    // 直前のノードが存在する場合
+    if (prev != -1) {
+      L[prev].next = L[x].next;
+    } else { // 直前のノードが存在しない場合、削除対象のノードが先頭のノードである
+      *head = L[x].next;
+    }
+  }
 }
 
 int list_maximum(struct cell *L, int *head) {
