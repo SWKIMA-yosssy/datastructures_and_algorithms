@@ -13,7 +13,7 @@ int allocate_object(struct cell *L, int *f);
 void free_object(struct cell *L, int *freeL, int *x);
 void list_insert(struct cell *L, int *head, int *p, int x);
 int list_search(struct cell *L, int *head, int *a);
-void list_delete(struct cell *L, int *head, int *x);
+void list_delete(struct cell *L, int *head, int x);
 int list_maximum(struct cell *L, int *head);
 int list_minimum(struct cell *L, int *head);
 
@@ -55,7 +55,12 @@ int main(void) {
   }
 
   for (i = 0; i < N; i++) {
-    printf("%d\n", List[i].key);
+    Data[i] = List[list_minimum(List, &head)].key;
+    list_delete(List, &head, i);
+  }
+
+  for (i = 0; i < N; i++) {
+    printf("%d\n", Data[i]);
   }
 
   return 0;
@@ -103,16 +108,16 @@ int list_search(struct cell *L, int *head, int *a) {
   return x;
 }
 
-void list_delete(struct cell *L, int *head, int *x) {
-  if (L[*x].prev != -1) {
-    L[L[*x].prev].next = L[*x].next;
-    if (L[*x].next != -1) {
-      L[L[*x].next].prev = L[*x].prev;
+void list_delete(struct cell *L, int *head, int x) {
+  if (L[x].prev != -1) {
+    L[L[x].prev].next = L[x].next;
+    if (L[x].next != -1) {
+      L[L[x].next].prev = L[x].prev;
     }
   } else {
-    *head = L[*x].next;
-    if (L[*x].next != -1) {
-      L[L[*x].next].prev = -1;
+    *head = L[x].next;
+    if (L[x].next != -1) {
+      L[L[x].next].prev = -1;
     }
   }
 }
