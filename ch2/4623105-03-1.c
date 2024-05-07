@@ -49,6 +49,14 @@ int main(void) {
   head = -1;
   freeL = 0;
 
+  for (i = 0; i < N; i++) {
+    list_insert(List, &head, &head, &Data[i]);
+  }
+
+  for (i = 0; i < N; i++) {
+    printf("%d", List[i].key);
+  }
+
   return 0;
 }
 
