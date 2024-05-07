@@ -11,7 +11,7 @@ struct cell {
 
 int allocate_object(struct cell *L, int *f);
 void free_object(struct cell *L, int *freeL, int *x);
-void list_insert(struct cell *L, int *head, int *p, int *x);
+void list_insert(struct cell *L, int *head, int *p, int x);
 int list_search(struct cell *L, int *head, int *a);
 void list_delete(struct cell *L, int *head, int *x);
 int list_maximum(struct cell *L, int *head);
@@ -50,11 +50,12 @@ int main(void) {
   freeL = 0;
 
   for (i = 0; i < N; i++) {
-    list_insert(List, &head, &head, &Data[i]);
+    List[i].key = Data[i];
+    list_insert(List, &head, &head, i);
   }
 
   for (i = 0; i < N; i++) {
-    printf("%d", List[i].key);
+    printf("%d\n", List[i].key);
   }
 
   return 0;
@@ -80,17 +81,17 @@ void free_object(struct cell *L, int *freeL, int *x) {
   *freeL = *x;
 }
 
-void list_insert(struct cell *L, int *head, int *p, int *x) {
+void list_insert(struct cell *L, int *head, int *p, int x) {
   if (*p != -1) {
-    L[*x].prev = *p;
-    L[*x].next = L[*p].next;
-    L[*p].next = *x;
-    L[L[*x].next].prev = *x; // prev[q] = x;
+    L[x].prev = *p;
+    L[x].next = L[*p].next;
+    L[*p].next = x;
+    L[L[x].next].prev = x; // prev[q] = x;
   } else {
-    L[*x].prev = *p;
-    L[*x].next = *head;
-    *head = *x;
-    L[L[*x].next].prev = *x;
+    L[x].prev = *p;
+    L[x].next = *head;
+    *head = x;
+    L[L[x].next].prev = x;
   }
 }
 
