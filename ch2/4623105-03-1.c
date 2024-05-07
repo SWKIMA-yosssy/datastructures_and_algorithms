@@ -55,12 +55,6 @@ int main(void) {
   }
 
   for (i = 0; i < N; i++) {
-    printf("prev:%d key:%d next:%d\n", List[i].prev, List[i].key, List[i].next);
-  }
-
-  for (i = 0; i < N; i++) {
-    printf("No.%d is minimum:%d\n", list_minimum(List, &head),
-           List[list_minimum(List, &head)].key);
     Data[i] = List[list_minimum(List, &head)].key;
     list_delete(List, &head, list_minimum(List, &head));
   }
@@ -104,8 +98,8 @@ void list_insert(struct cell *L, int *head, int *p, int x) {
     L[x].prev = *p;
     L[x].next = *head;
     *head = x;
-    if (L[x].next != -1) {
-      L[L[x].next].prev = x;
+    if (L[L[x].next].prev == -1) {
+      L[L[*head].next].prev = x;
     }
   }
 }
@@ -138,7 +132,7 @@ int list_maximum(struct cell *L, int *head) {
   int y;
   y = x;
   int max = -2147483648;
-  while (x == -1) {
+  while (x != -1) {
     if (L[x].key > max) {
       max = L[x].key;
       y = x;
@@ -154,7 +148,7 @@ int list_minimum(struct cell *L, int *head) {
   int y;
   y = x;
   int min = 2147483647;
-  while (x == -1) {
+  while (x != -1) {
     if (L[x].key < min) {
       min = L[x].key;
       y = x;
