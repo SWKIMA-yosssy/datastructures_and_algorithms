@@ -55,6 +55,12 @@ int main(void) {
   }
 
   for (i = 0; i < N; i++) {
+    printf("prev:%d key:%d next:%d\n", List[i].prev, List[i].key, List[i].next);
+  }
+
+  for (i = 0; i < N; i++) {
+    printf("No.%d is minimum:%d\n", list_minimum(List, &head),
+           List[list_minimum(List, &head)].key);
     Data[i] = List[list_minimum(List, &head)].key;
     list_delete(List, &head, list_minimum(List, &head));
   }
@@ -91,12 +97,16 @@ void list_insert(struct cell *L, int *head, int *p, int x) {
     L[x].prev = *p;
     L[x].next = L[*p].next;
     L[*p].next = x;
-    L[L[x].next].prev = x; // prev[q] = x;
+    if (L[x].next != -1) {
+      L[L[x].next].prev = x;
+    }
   } else {
     L[x].prev = *p;
     L[x].next = *head;
     *head = x;
-    L[L[x].next].prev = x;
+    if (L[x].next != -1) {
+      L[L[x].next].prev = x;
+    }
   }
 }
 
