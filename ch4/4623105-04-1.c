@@ -13,6 +13,7 @@ struct node {
 void inorder_tree_walk(struct node *x);
 struct node *tree_search(struct node *T, int a);
 struct node *tree_minimum(struct node *x);
+struct node *tree_maximum(struct node *x);
 struct node *tree_insert(struct node *T, struct node *x);
 
 int main(void) {
@@ -52,6 +53,8 @@ int main(void) {
   }
   inorder_tree_walk(Tree);
   printf("\n");
+  printf("max node: %d min node: %d \n", tree_maximum(Tree)->key,
+         tree_minimum(Tree)->key);
   return 0;
 }
 
@@ -92,7 +95,23 @@ struct node *tree_insert(struct node *T, struct node *x) {
 void inorder_tree_walk(struct node *x) {
   if (x != NULL) {
     inorder_tree_walk(x->left);
-    printf("%d", x->key);
+    printf("%d ", x->key);
     inorder_tree_walk(x->right);
   }
+}
+
+struct node *tree_minimum(struct node *x) {
+  struct node *y = x;
+  while (y->left != NULL) {
+    y = y->left;
+  }
+  return y;
+}
+
+struct node *tree_maximum(struct node *x) {
+  struct node *y = x;
+  while (y->right != NULL) {
+    y = y->right;
+  }
+  return y;
 }
