@@ -60,8 +60,8 @@ int main(void) {
   for (i = 0; i < N; i++) {
     tree_delete(Tree, tree_search(Tree, Data[i]));
     inorder_tree_walk(Tree);
-    printf("max node: %d min node: %d \n", tree_maximum(Tree)->key,
-           tree_minimum(Tree)->key);
+    printf("root: %d max node: %d min node: %d \n", Tree->key,
+           tree_maximum(Tree)->key, tree_minimum(Tree)->key);
   }
   return 0;
 }
@@ -141,7 +141,7 @@ struct node *tree_delete(struct node *T, struct node *z) {
   struct node *y;
   struct node *p;
   struct node *r = T;
-  int flag = 0;                              // left = 0 right = 1
+  int flag = 2; // left = 0 right = 1 (y=z don't have child) = 2
   if (z->right != NULL && z->left != NULL) { // z has 2 children
     y = tree_minimum(z->right);
   } else {
@@ -161,12 +161,18 @@ struct node *tree_delete(struct node *T, struct node *z) {
     x->parent = p;
   }
   if (p == NULL) {
-    r = x;
+    T = x;
   } else {
-    if (flag) {
+    if (flag == 1) {
       p->right = x;
-    } else {
-      p->left = y;
+    } else if (flag == 0) {
+      p->left = x;
+    } else if (flag == 2) {
+      if (p->left == y) {
+        p->left = NULL;
+      } else {
+        p->right = NULL;
+      }
     }
   }
   if (y != z) {
