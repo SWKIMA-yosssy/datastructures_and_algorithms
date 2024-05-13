@@ -115,3 +115,15 @@ struct node *tree_maximum(struct node *x) {
   }
   return y;
 }
+
+struct node *tree_search(struct node *T, int a) {
+  struct node *x = T;
+  while (x != NULL && x->key != a) {
+    if (a < x->key) {
+      x = x->left;
+    } else {
+      x = x->right;
+    }
+  }
+  return x;
+}
