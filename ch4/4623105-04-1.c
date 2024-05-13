@@ -50,15 +50,48 @@ int main(void) {
     x->parent = x->left = x->right = NULL;
     Tree = tree_insert(Tree, x);
   }
+  inorder_tree_walk(Tree);
   return 0;
 }
 
 struct node *tree_insert(struct node *T, struct node *x) {
   struct node *r, *y, *z;
+  int flag = 0; // left = 0, right =1;
 
   r = T;
   y = NULL;
   z = r;
 
+  while (z != NULL) {
+    if (x->key < z->key) {
+      y = z;
+      z = z->left;
+      flag = 0;
+    } else {
+      y = z;
+      z = z->right;
+      flag = 1;
+    }
+  }
+  x->parent = y;
+
+  if (y == NULL) {
+    T = x;
+  } else {
+    if (flag) {
+      y->right = x;
+    } else {
+      y->left = x;
+    }
+  }
+
   return r;
+}
+
+void inorder_tree_walk(struct node *x) {
+  if (x != NULL) {
+    inorder_tree_walk(x->left);
+    printf("%d", x->key);
+    inorder_tree_walk(x->right);
+  }
 }
