@@ -54,12 +54,13 @@ int main(void) {
   }
   inorder_tree_walk(Tree);
   printf("\n");
-  printf("max node: %d min node: %d \n", tree_maximum(Tree)->key,
-         tree_minimum(Tree)->key);
-
+  printf("root: %d max node: %d min node: %d \n", Tree->key,
+         tree_maximum(Tree)->key, tree_minimum(Tree)->key);
+  printf("\n");
   for (i = 0; i < N; i++) {
-    tree_delete(Tree, tree_search(Tree, Data[i]));
+    Tree = tree_delete(Tree, tree_search(Tree, Data[i]));
     inorder_tree_walk(Tree);
+    printf("\n");
     printf("root: %d max node: %d min node: %d \n", Tree->key,
            tree_maximum(Tree)->key, tree_minimum(Tree)->key);
   }
@@ -161,7 +162,7 @@ struct node *tree_delete(struct node *T, struct node *z) {
     x->parent = p;
   }
   if (p == NULL) {
-    T = x;
+    r = x;
   } else {
     if (flag == 1) {
       p->right = x;
