@@ -33,7 +33,7 @@ int main(void) {
 
   fp = fopen(fname, "r");
   fscanf(fp, "%d", &N);
-  if (N < maxN) {
+  if (N > maxN) {
     printf("N is too large, setting N = %d\n", maxN);
     N = maxN;
   }
@@ -51,6 +51,7 @@ int main(void) {
     Tree = tree_insert(Tree, x);
   }
   inorder_tree_walk(Tree);
+  printf("\n");
   return 0;
 }
 
@@ -76,7 +77,7 @@ struct node *tree_insert(struct node *T, struct node *x) {
   x->parent = y;
 
   if (y == NULL) {
-    T = x;
+    r = x;
   } else {
     if (flag) {
       y->right = x;
