@@ -15,6 +15,7 @@ struct node *tree_search(struct node *T, int a);
 struct node *tree_minimum(struct node *x);
 struct node *tree_maximum(struct node *x);
 struct node *tree_insert(struct node *T, struct node *x);
+struct node *tree_delete(struct node *T, struct node *z);
 
 int main(void) {
   struct node *Tree;
@@ -126,4 +127,44 @@ struct node *tree_search(struct node *T, int a) {
     }
   }
   return x;
+}
+
+struct node *tree_delete(struct node *T, struct node *z) {
+  struct node *x;
+  struct node *y;
+  struct node *p;
+  struct node *r = T;
+  int flag = 0;                              // left = 0 right = 1
+  if (z->right != NULL && z->left != NULL) { // z has 2 children
+    y = tree_minimum(z->right);
+  } else {
+    y = z;
+  }
+  p = y->parent;
+  if (y->right == NULL && y->left == NULL) { // y does not have child
+    x = NULL;
+  } else {
+    if (y->right != NULL) {
+      x = y->right;
+      flag = 1;
+    } else {
+      x = y->left;
+      flag = 0;
+    }
+    x->parent = p;
+  }
+  if (p == NULL) {
+    r = x;
+  } else {
+    if (flag) {
+      p->right = x;
+    } else {
+      p->left = y;
+    }
+  }
+  if (y != z) {
+    z->key = y->key;
+  }
+  free(y);
+  return r;
 }
