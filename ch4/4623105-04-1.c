@@ -56,6 +56,13 @@ int main(void) {
   printf("\n");
   printf("max node: %d min node: %d \n", tree_maximum(Tree)->key,
          tree_minimum(Tree)->key);
+
+  for (i = 0; i < N; i++) {
+    tree_delete(Tree, tree_search(Tree, Data[i]));
+    inorder_tree_walk(Tree);
+    printf("max node: %d min node: %d \n", tree_maximum(Tree)->key,
+           tree_minimum(Tree)->key);
+  }
   return 0;
 }
 
@@ -165,6 +172,7 @@ struct node *tree_delete(struct node *T, struct node *z) {
   if (y != z) {
     z->key = y->key;
   }
+  printf("delete node: %d\n", y->key);
   free(y);
   return r;
 }
