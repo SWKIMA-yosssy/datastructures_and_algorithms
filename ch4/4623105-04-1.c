@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define maxN 50
+
+struct node {
+  int key;
+  struct node *parent;
+  struct node *left;
+  struct node *right;
+};
+
+void inorder_tree_walk(struct node *x);
+struct node *tree_search(struct node *T, int a);
+struct node *tree_minimum(struct node *x);
+struct node *tree_insert(struct node *T, struct node *x);
+
+int main(void) {
+  struct node *Tree;
+  struct node *x, *y, *z;
+
+  int N;
+  int Data[maxN];
+  int i;
+  int a;
+  char fname[128];
+  FILE *fp;
+
+  printf("input filename: ");
+  fgets(fname, sizeof(fname), stdin);
+  fname[strlen(fname) - 1] = '\0';
+  fflush(stdin);
+
+  fp = fopen(fname, "r");
+  fscanf(fp, "%d", &N);
+  if (N < maxN) {
+    printf("N is too large, setting N = %d\n", maxN);
+    N = maxN;
+  }
+  for (i = 0; i < N; i++) {
+    fscanf(fp, "%d", &Data[i]);
+  }
+  fclose(fp);
+
+  Tree = NULL;
+
+  for (i = 0; i < N; i++) {
+    x = (struct node *)malloc(sizeof(struct node));
+    x->key = Data[i];
+    x->parent = x->left = x->right = NULL;
+    Tree = tree_insert(Tree, x);
+  }
+  return 0;
+}
+
+struct node *tree_insert(struct node *T, struct node *x) {
+  struct node *r, *y, *z;
+
+  r = T;
+  y = NULL;
+  z = r;
+
+  return r;
+}
