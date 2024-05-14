@@ -150,51 +150,49 @@ struct node *tree_delete(struct node *T, struct node *z) {
   struct node *p;
   struct node *r = T;
 
-  if (z->left == NULL) {
-    // Case 1: z has no left child
-    x = z->right;
-  } else if (z->right == NULL) {
-    // Case 2: z has no right child
-    x = z->left;
-  } else {
-    // Case 3: z has two children
+  if (z == NULL) { // confirtm there is a node to delete
+    printf("no node to delete\n");
+    return r;
+  }
+
+  if (z->right == NULL && z->left == NULL) { // case: z has no child
+    y = z;
+    p = z->parent;
+    x = NULL;
+    if (p->left == z) {
+      p->left = x;
+    } else {
+      p->right = x;
+    }
+  } else if (z->right != NULL && z->left != NULL) { // case: z has 2 child
     y = tree_minimum(z->right);
-    if (y->parent != z) {
-      p = y->parent;
-      if (y->right != NULL) {
-        y->right->parent = p;
-      }
-      if (p->left == y) {
-        p->left = y->right;
-      } else {
-        p->right = y->right;
-      }
-      y->right = z->right;
-      if (y->right != NULL) {
-        y->right->parent = y;
-      }
+    p = y->parent;
+    z->key = y->key;
+    if (p->left == y) {
+      p->left = y->right;
+    } else {
+      p->right = y->right;
     }
-    y->left = z->left;
+  } else { // case: z has only one child
+    y = z;
+    p = y->parent;
     if (y->left != NULL) {
-      y->left->parent = y;
+      x = y->left;
+    } else {
+      x = y->right;
     }
-    x = y;
-  }
-
-  p = z->parent;
-  if (p == NULL) {
-    r = x;
-  } else if (p->left == z) {
-    p->left = x;
-  } else {
-    p->right = x;
-  }
-
-  if (x != NULL) {
     x->parent = p;
+    if (p != NULL) {
+      if (p->left == y) {
+        p->left = x;
+      } else {
+        p->right = x;
+      }
+    } else { // p == NULL
+      r = x;
+    }
   }
-
-  printf("actual delete node: %d\n", z->key);
-  free(z);
+  printf("actual delete note: %d\n", y->key);
+  free(y);
   return r;
 }
