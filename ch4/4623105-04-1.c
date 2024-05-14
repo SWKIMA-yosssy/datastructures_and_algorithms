@@ -61,7 +61,7 @@ int main(void) {
     Tree = tree_delete(Tree, tree_search(Tree, Data[i]));
     inorder_tree_walk(Tree);
     printf("\n");
-    printf("root: %d max node: %d min node: %d \n", Tree->key,
+    printf("root: %d max node: %d min node: %d \n\n", Tree->key,
            tree_maximum(Tree)->key, tree_minimum(Tree)->key);
   }
   return 0;
@@ -142,44 +142,55 @@ struct node *tree_delete(struct node *T, struct node *z) {
   struct node *y;
   struct node *p;
   struct node *r = T;
-  int flag = 2; // left = 0 right = 1 (y=z don't have child) = 2
+  int flag = 0; // number of z's children
+
+  if (z == NULL) { // confirm whether tree is blank or not
+    printf("there is no node to delete; tree is blank\n");
+    return r;
+  } else {
+    printf("delete note: %d ", z->key);
+  }
+
   if (z->right != NULL && z->left != NULL) { // z has 2 children
     y = tree_minimum(z->right);
+    flag = 2;
   } else {
     y = z;
+    flag = 1;
   }
   p = y->parent;
   if (y->right == NULL && y->left == NULL) { // y does not have child
     x = NULL;
+    flag = 0;
   } else {
     if (y->right != NULL) {
       x = y->right;
-      flag = 1;
     } else {
       x = y->left;
-      flag = 0;
     }
     x->parent = p;
   }
   if (p == NULL) {
     r = x;
   } else {
-    if (flag == 1) {
-      p->right = x;
-    } else if (flag == 0) {
-      p->left = x;
-    } else if (flag == 2) {
-      if (p->left == y) {
+    if (flag == 0) {
+      if (p->left == z) {
         p->left = NULL;
       } else {
         p->right = NULL;
+      }
+    } else {
+      if (p->left == y) {
+        p->left = x;
+      } else {
+        p->right = x;
       }
     }
   }
   if (y != z) {
     z->key = y->key;
   }
-  printf("delete node: %d\n", y->key);
+  printf("actual delete node: %d\n", y->key);
   free(y);
   return r;
 }
