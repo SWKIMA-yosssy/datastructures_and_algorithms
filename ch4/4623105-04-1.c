@@ -61,8 +61,12 @@ int main(void) {
     Tree = tree_delete(Tree, tree_search(Tree, Data[i]));
     inorder_tree_walk(Tree);
     printf("\n");
-    printf("root: %d max node: %d min node: %d \n\n", Tree->key,
-           tree_maximum(Tree)->key, tree_minimum(Tree)->key);
+    if (Tree == NULL) {
+      printf("Tree is empty\n");
+    } else {
+      printf("root: %d max node: %d min node: %d \n\n", Tree->key,
+             tree_maximum(Tree)->key, tree_minimum(Tree)->key);
+    }
   }
   return 0;
 }
@@ -136,61 +140,61 @@ struct node *tree_search(struct node *T, int a) {
   }
   return x;
 }
-
 struct node *tree_delete(struct node *T, struct node *z) {
+  if (z == NULL) {
+    return T;
+  }
+
   struct node *x;
   struct node *y;
   struct node *p;
   struct node *r = T;
-  int flag = 0; // number of z's children
 
-  if (z == NULL) { // confirm whether tree is blank or not
-    printf("there is no node to delete; tree is blank\n");
-    return r;
+  if (z->left == NULL) {
+    // Case 1: z has no left child
+    x = z->right;
+  } else if (z->right == NULL) {
+    // Case 2: z has no right child
+    x = z->left;
   } else {
-    printf("delete note: %d ", z->key);
-  }
-
-  if (z->right != NULL && z->left != NULL) { // z has 2 children
+    // Case 3: z has two children
     y = tree_minimum(z->right);
-    flag = 2;
-  } else {
-    y = z;
-    flag = 1;
-  }
-  p = y->parent;
-  if (y->right == NULL && y->left == NULL) { // y does not have child
-    x = NULL;
-    flag = 0;
-  } else {
-    if (y->right != NULL) {
-      x = y->right;
-    } else {
-      x = y->left;
+    if (y->parent != z) {
+      p = y->parent;
+      if (y->right != NULL) {
+        y->right->parent = p;
+      }
+      if (p->left == y) {
+        p->left = y->right;
+      } else {
+        p->right = y->right;
+      }
+      y->right = z->right;
+      if (y->right != NULL) {
+        y->right->parent = y;
+      }
     }
-    x->parent = p;
+    y->left = z->left;
+    if (y->left != NULL) {
+      y->left->parent = y;
+    }
+    x = y;
   }
+
+  p = z->parent;
   if (p == NULL) {
     r = x;
+  } else if (p->left == z) {
+    p->left = x;
   } else {
-    if (flag == 0) {
-      if (p->left == z) {
-        p->left = NULL;
-      } else {
-        p->right = NULL;
-      }
-    } else {
-      if (p->left == y) {
-        p->left = x;
-      } else {
-        p->right = x;
-      }
-    }
+    p->right = x;
   }
-  if (y != z) {
-    z->key = y->key;
+
+  if (x != NULL) {
+    x->parent = p;
   }
-  printf("actual delete node: %d\n", y->key);
-  free(y);
+
+  printf("actual delete node: %d\n", z->key);
+  free(z);
   return r;
 }
