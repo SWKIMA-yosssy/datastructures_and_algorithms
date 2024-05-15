@@ -162,27 +162,27 @@ struct rbnode *left_rotate(struct rbnode *T, struct rbnode *x) {
   return r;
 }
 
-struct rbnode *left_rotate(struct rbnode *T, struct rbnode *x) {
+struct rbnode *right_rotate(struct rbnode *T, struct rbnode *x) {
   struct rbnode *r, *y, *z, *p;
 
   r = T;
-  y = x->right;
-  z = y->left;
+  y = x->left;
+  z = y->right;
 
-  x->right = z;
+  x->left = z;
   z->parent = x;
 
   p = x->parent;
   if (p == NILT) {
     r = y;
   } else {
-    if (x == p->left) {
-      p->left = y;
-    } else {
+    if (x == p->right) {
       p->right = y;
+    } else {
+      p->left = y;
     }
   }
-  y->left = x;
+  y->right = x;
   x->parent = y;
   y->parent = p;
   return r;
