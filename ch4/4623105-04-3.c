@@ -18,6 +18,7 @@ struct rbnode *tree_maximum(struct rbnode *x);
 struct rbnode *rb_insert(struct rbnode *T, struct rbnode *x);
 struct rbnode *left_rotate(struct rbnode *T, struct rbnode *x);
 struct rbnode *right_rotate(struct rbnode *T, struct rbnode *x);
+int bh(struct rbnode *x);
 
 struct rbnode *NILT;
 int main(void) {
@@ -197,4 +198,21 @@ struct rbnode *right_rotate(struct rbnode *T, struct rbnode *x) {
   x->parent = y;
   y->parent = p;
   return r;
+}
+
+int bh(struct rbnode *x) {
+  int h, h_2;
+  if (x == NILT) {
+    return 0;
+  } else {
+    h = bh(x->left) + x->left->color;
+    h_2 = bh(x->right) + x->right->color;
+  }
+
+  if (h != h_2) {
+    fprintf(stderr, "invalid black hight\n");
+    return -1;
+  } else {
+    return h;
+  }
 }
