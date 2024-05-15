@@ -17,6 +17,7 @@ struct rbnode *tree_minimum(struct rbnode *x);
 struct rbnode *tree_maximum(struct rbnode *x);
 struct rbnode *rb_insert(struct rbnode *T, struct rbnode *x);
 struct rbnode *left_rotate(struct rbnode *T, struct rbnode *x);
+struct rbnode *right_rotate(struct rbnode *T, struct rbnode *x);
 
 struct rbnode *NILT;
 int main(void) {
@@ -68,35 +69,45 @@ int main(void) {
 
 struct rbnode *rb_insert(struct rbnode *T, struct rbnode *x) {
   struct rbnode *r, *y, *z;
-  int flag = 0; // left = 0, right =1;
-
   r = T;
-  y = NILT;
-  z = r;
-
-  while (z != NILT) {
-    if (x->key < z->key) {
-      y = z;
-      z = z->left;
-      flag = 0;
-    } else {
-      y = z;
-      z = z->right;
-      flag = 1;
+  x->color = 0;
+  while (x != r && x->parent->color == 0) {
+    if (x->parent == x->parent->parent->left) {
+      y = x->parent->parent->right;
+      if (y->color == 0) {
+        x->parent->color = 1;
+        y->color = 1;
+        x->parent->parent->color = 0;
+        x->parent->parent = x;
+      } else {
+        if (x == x->parent->right) {
+          x = x->parent;
+          r = left_rotate(T, x);
+        }
+        x->parent->color = 1;
+        x->parent->parent->color = 0;
+        r = right_rotate(T, x->parent->parent);
+      }
+    } else if (x->parent == x->parent->parent->right) {
+      y = x->parent->parent->left;
+      if (y->color == 0) {
+        x->parent->color = 1;
+        y->color = 1;
+        x->parent->parent->color = 0;
+        x->parent->parent = x;
+      } else {
+        if (x == x->parent->left) {
+          x = x->parent;
+          r = right_rotate(T, x);
+        }
+        x->parent->color = 1;
+        x->parent->parent->color = 0;
+        r = left_rotate(T, x->parent->parent);
+      }
     }
   }
-  x->parent = y;
 
-  if (y == NILT) {
-    r = x;
-  } else {
-    if (flag) {
-      y->right = x;
-    } else {
-      y->left = x;
-    }
-  }
-
+  r->color = 1;
   return r;
 }
 
