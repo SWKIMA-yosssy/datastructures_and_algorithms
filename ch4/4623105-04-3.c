@@ -62,54 +62,78 @@ int main(void) {
   }
   inorder_tree_walk(Tree);
   printf("\n");
-  printf("root: %d max rbnode: %d min rbnode: %d \n", Tree->key,
-         tree_maximum(Tree)->key, tree_minimum(Tree)->key);
+  printf("root: %d max rbnode: %d min rbnode: %d black height: %d\n", Tree->key,
+         tree_maximum(Tree)->key, tree_minimum(Tree)->key, bh(Tree));
   printf("\n");
   return 0;
 }
 
 struct rbnode *rb_insert(struct rbnode *T, struct rbnode *x) {
-  struct rbnode *r, *y, *z;
-  r = T;
-  x->color = 0;
-  while (x != r && x->parent->color == 0) {
+  struct rbnode *y = NILT;
+  struct rbnode *z = T;
+
+  // 正しい位置を見つけるためのループ
+  while (z != NILT) {
+    y = z;
+    if (x->key < z->key)
+      z = z->left;
+    else
+      z = z->right;
+  }
+
+  // 親ノードの設定
+  x->parent = y;
+  if (y == NILT) {
+    T = x;
+  } else if (x->key < y->key) {
+    y->left = x;
+  } else {
+    y->right = x;
+  }
+
+  x->left = NILT;
+  x->right = NILT;
+  x->color = 0; // 新しいノードは赤色
+
+  // 修正ロジック
+  struct rbnode *uncle;
+  while (x != T && x->parent->color == 0) {
     if (x->parent == x->parent->parent->left) {
-      y = x->parent->parent->right;
-      if (y->color == 0) {
+      uncle = x->parent->parent->right;
+      if (uncle->color == 0) {
         x->parent->color = 1;
-        y->color = 1;
+        uncle->color = 1;
         x->parent->parent->color = 0;
-        x->parent->parent = x;
+        x = x->parent->parent;
       } else {
         if (x == x->parent->right) {
           x = x->parent;
-          r = left_rotate(T, x);
+          T = left_rotate(T, x);
         }
         x->parent->color = 1;
         x->parent->parent->color = 0;
-        r = right_rotate(T, x->parent->parent);
+        T = right_rotate(T, x->parent->parent);
       }
-    } else if (x->parent == x->parent->parent->right) {
-      y = x->parent->parent->left;
-      if (y->color == 0) {
+    } else {
+      uncle = x->parent->parent->left;
+      if (uncle->color == 0) {
         x->parent->color = 1;
-        y->color = 1;
+        uncle->color = 1;
         x->parent->parent->color = 0;
-        x->parent->parent = x;
+        x = x->parent->parent;
       } else {
         if (x == x->parent->left) {
           x = x->parent;
-          r = right_rotate(T, x);
+          T = right_rotate(T, x);
         }
         x->parent->color = 1;
         x->parent->parent->color = 0;
-        r = left_rotate(T, x->parent->parent);
+        T = left_rotate(T, x->parent->parent);
       }
     }
   }
-
-  r->color = 1;
-  return r;
+  T->color = 1;
+  return T;
 }
 
 void inorder_tree_walk(struct rbnode *x) {
@@ -210,7 +234,7 @@ int bh(struct rbnode *x) {
   }
 
   if (h != h_2) {
-    fprintf(stderr, "invalid black hight\n");
+    fprintf(stderr, "invalid black height\n");
     return -1;
   } else {
     return h;
