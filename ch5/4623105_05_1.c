@@ -35,14 +35,14 @@ int main(void) {
   fclose(fp);
 
   for (i = 0; i < N; i++) {
-    printf("%d", Data[i]);
+    printf("%d ", Data[i]);
   }
   printf("\n");
 
   heapsort(Heap, Data, N);
 
   for (i = 0; i < N; i++) {
-    printf("%d", Data[i]);
+    printf("%d ", Data[i]);
   }
   printf("\n");
 
@@ -57,7 +57,7 @@ int parent(int i) {
 void upheap_sort(int *H, int i) {
   int u = i;
   int buf;
-  while (u < 0 && H[parent(u)] < H[u]) {
+  while (u > 0 && H[parent(u)] < H[u]) {
     buf = H[parent(u)];
     H[parent(u)] = H[u];
     H[u] = buf;
@@ -72,7 +72,7 @@ void insert(int *H, int i, int a) {
 
 void build_heap(int *H, int *A, int n) {
   int i;
-  for (i = 0; i < n - 1; i++) {
+  for (i = 0; i <= n - 1; i++) {
     insert(H, i, A[i]);
   }
 }
@@ -84,13 +84,13 @@ void downheap_sort(int *H, int i) {
   int buf;
   int flag = 1; // 0:no change 1:change executed;
   while (flag == 1) {
-    if (2u + 1 <= i) {
-      l = 2u + 1;
+    if (2 * u + 1 <= i) {
+      l = 2 * u + 1;
     } else {
       l = u;
     }
-    if (2u + 2 <= i) {
-      r = 2u + 2;
+    if (2 * u + 2 <= i) {
+      r = 2 * u + 2;
     } else {
       r = u;
     }
@@ -99,15 +99,18 @@ void downheap_sort(int *H, int i) {
         buf = H[u];
         H[u] = H[r];
         H[r] = buf;
+        u = r;
       } else if (H[r] < H[l]) {
         buf = H[u];
         H[u] = H[l];
         H[l] = buf;
+        u = l;
       }
     } else if (H[l] < H[u] && H[u] < H[r]) {
       buf = H[u];
       H[u] = H[r];
       H[r] = buf;
+      u = r;
     } else {
       flag = 0;
     }
