@@ -66,6 +66,7 @@ int main(void) {
     }
   }
 
+  printf("###finish insert###\n");
   fp = fopen(fname, "r");
   fscanf(fp, "%d", &N);
   if (N > maxN) {
@@ -143,20 +144,18 @@ int list_length(struct cell *L, int a) {
   }
   return counter;
 }
-
 void chained_hash_delete(int *A, struct cell *L, int x) {
-  int h = A[hash_val(L[x].key)];
+  int h = hash_val(L[x].key); // ハッシュ値を取得
   int z = A[h];
+
   if (z == x) {
-    A[h] = -1;
+    A[h] = L[x].next;
   } else {
     while (z != -1 && L[z].next != x) {
       z = L[z].next;
     }
-  }
-  if (z != -1) {
-    L[z].next = L[x].next;
-  } else {
-    A[h] = L[x].next;
+    if (z != -1) {
+      L[z].next = L[x].next;
+    }
   }
 }
