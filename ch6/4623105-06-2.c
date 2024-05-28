@@ -50,6 +50,7 @@ int main(void) {
       printf("A[%d] = %s\n", h, A[h].key);
     }
   }
+  printf("###finish list insert\n");
 
   fp = fopen(fname, "r");
   fscanf(fp, "%d", &N);
@@ -63,6 +64,12 @@ int main(void) {
   }
   fclose(fp);
 
+  for (h = 0; h < m; h++) {
+    if (A[h].state != 0) {
+      printf("A[%d] = %s\n", h, A[h].key);
+    }
+  }
+  printf("###finish list delete\n");
   return 0;
 }
 
@@ -103,7 +110,7 @@ int hash_search(struct cell *A, char *a) {
   int x = hash_val(a);
   int i = 0;
 
-  while (i <= m) {
+  while (i < m) {
     if (A[x].state == 1 && strcmp(A[x].key, a) == 0) {
       return x;
     } else if (A[x].state == 0) {
@@ -119,7 +126,7 @@ int hash_search(struct cell *A, char *a) {
 void hash_delete(struct cell *A, char *a) {
   int x = hash_search(A, a);
   if (x != -1) {
-    strcpy(A[x].key, NULL);
+    strcpy(A[x].key, "\0");
     A[x].state = 2;
   }
 }
