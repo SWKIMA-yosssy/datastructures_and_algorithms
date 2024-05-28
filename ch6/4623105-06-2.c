@@ -13,6 +13,7 @@ struct cell {
 int hash_search(struct cell *A, char *a);
 void hash_insert(struct cell *A, char *a);
 int hash_val(char *a);
+void hash_delete(struct cell *A, char *a);
 
 int main(void) {
   struct cell A[m];
@@ -39,7 +40,7 @@ int main(void) {
   }
   for (i = 0; i < N; i++) {
     fscanf(fp, "%s", word);
-    if (hash_search(A, word) != -1) {
+    if (hash_search(A, word) == -1) {
       hash_insert(A, word);
     }
   }
@@ -49,6 +50,18 @@ int main(void) {
       printf("A[%d] = %s\n", h, A[h].key);
     }
   }
+
+  fp = fopen(fname, "r");
+  fscanf(fp, "%d", &N);
+  if (N > maxN) {
+    N = maxN;
+  }
+
+  for (i = 0; i < N; i++) {
+    fscanf(fp, "%s", word); // delete list node
+    hash_delete(A, word);
+  }
+  fclose(fp);
 
   return 0;
 }
@@ -101,4 +114,12 @@ int hash_search(struct cell *A, char *a) {
     }
   }
   return -1;
+}
+
+void hash_delete(struct cell *A, char *a) {
+  int x = hash_search(A, a);
+  if (x != -1) {
+    strcpy(A[x].key, NULL);
+    A[x].state = 2;
+  }
 }
