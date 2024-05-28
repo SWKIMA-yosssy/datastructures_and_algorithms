@@ -128,7 +128,7 @@ void chained_hash_insert(int *A, struct cell *L, int x) {
 int chained_hash_search(int *A, struct cell *L, char *a) {
   int x;
   x = A[hash_val(a)];
-  while (x != -1 && L[x].key != a) {
+  while (x != -1 && strcmp(L[x].key, a) != 0) {
     x = L[x].next;
   }
   return x;
@@ -145,13 +145,18 @@ int list_length(struct cell *L, int a) {
 }
 
 void chained_hash_delete(int *A, struct cell *L, int x) {
-  int z = A[hash_val(L[x].key)];
-  while (L[z].next != x && z != -1) {
-    z = L[z].next;
+  int h = A[hash_val(L[x].key)];
+  int z = A[h];
+  if (z == x) {
+    A[h] = -1;
+  } else {
+    while (z != -1 && L[z].next != x) {
+      z = L[z].next;
+    }
   }
-  if (z == -1) {
+  if (z != -1) {
     L[z].next = L[x].next;
   } else {
-    A[hash_val(L[x].key)] = L[x].next;
+    A[h] = L[x].next;
   }
 }
