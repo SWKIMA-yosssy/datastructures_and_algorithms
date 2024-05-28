@@ -145,7 +145,7 @@ int list_length(struct cell *L, int a) {
   return counter;
 }
 void chained_hash_delete(int *A, struct cell *L, int x) {
-  int h = hash_val(L[x].key); // ハッシュ値を取得
+  int h = hash_val(L[x].key);
   int z = A[h];
 
   if (z == x) {
