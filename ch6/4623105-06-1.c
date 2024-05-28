@@ -51,7 +51,7 @@ int main(void) {
     N = maxN;
   }
   for (i = 0; i < N; i++) {
-    fscanf(fp, "%s", &word[i]);
+    fscanf(fp, "%s", word);
     y = chained_hash_search(A, List, word);
     if (y == -1) {
       x = allocate_object(List, &freeL);
@@ -74,7 +74,7 @@ int main(void) {
   }
 
   for (i = 0; i < N; i++) {
-    fscanf(fp, "%s", &word[i]); // delete list node
+    fscanf(fp, "%s", word); // delete list node
     x = chained_hash_search(A, List, word);
     if (x != -1) {
       chained_hash_delete(A, List, x);
@@ -87,6 +87,7 @@ int main(void) {
       printf("A[%d] : length = %d\n", h, list_length(List, A[h]));
     }
   }
+  printf("###finish list delete\n");
   return 0;
 }
 
@@ -149,13 +150,16 @@ void chained_hash_delete(int *A, struct cell *L, int x) {
   int z = A[h];
 
   if (z == x) {
-    A[h] = L[x].next;
+    z = -1;
   } else {
     while (z != -1 && L[z].next != x) {
       z = L[z].next;
     }
-    if (z != -1) {
-      L[z].next = L[x].next;
-    }
+  }
+
+  if (z != -1) {
+    L[z].next = L[x].next;
+  } else {
+    A[h] = L[x].next;
   }
 }
