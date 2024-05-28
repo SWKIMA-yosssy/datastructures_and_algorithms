@@ -65,7 +65,7 @@ int main(void) {
   fclose(fp);
 
   for (h = 0; h < m; h++) {
-    if (A[h].state != 0) {
+    if (A[h].state != 0 && A[h].state != 2) {
       printf("A[%d] = %s\n", h, A[h].key);
     }
   }
