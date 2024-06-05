@@ -10,7 +10,7 @@ struct cell {
 };
 
 void bucket_sort(int *A, int n, int l, int u, int m);
-void insertion_sort(struct cell *L, int n);
+void insertion_sort(struct cell *L, int *n);
 
 int main(void) {
   int Data[maxN];
@@ -56,6 +56,7 @@ int main(void) {
 
   bucket_sort(Data, N - avoid_count, l, u, m);
 
+  printf("###after sort###\n");
   for (i = 0; i < N - avoid_count; i++) {
     printf("Data[%d] = %d\n", i, Data[i]);
   }
@@ -76,11 +77,24 @@ void bucket_sort(int *A, int n, int l, int u, int m) {
   }
 
   for (i = 0; i < n; i++) {
-    List[i].next = B[n * A[i] / (u - l)];
-    B[n * A[i] / (u - l)] = i;
+    List[i].next = B[m * A[i] / (u - l)];
+    printf("insert B[m*A[i]/u-l = %d] <- %d\n", B[m * A[i] / (u - l)],
+           List[i].key);
+    B[m * A[i] / (u - l)] = i;
+  }
+
+  // for debug
+  for (j = 0; j < m; j++) {
+    i = B[j];
+    printf("B[%d]:\n", j);
+    while (i != -1) {
+      printf("%d ->", List[i].key);
+      i = List[i].next;
+    }
+    printf("\n");
   }
   for (j = 0; j < m; j++) {
-    insertion_sort(List, B[j]);
+    insertion_sort(List, &B[j]);
   }
 
   i = 0;
@@ -94,8 +108,8 @@ void bucket_sort(int *A, int n, int l, int u, int m) {
   }
 }
 
-void insertion_sort(struct cell *L, int n) {
-  int i = n;
+void insertion_sort(struct cell *L, int *n) {
+  int i = *n;
   int length = 0;
   int j;
   int a;
@@ -105,7 +119,7 @@ void insertion_sort(struct cell *L, int n) {
   }
   int *A = (int *)malloc(sizeof(int) * length);
   j = 0;
-  i = n;
+  i = *n;
   while (i != -1) {
     A[j] = L[i].key;
     i = L[i].next;
