@@ -54,7 +54,6 @@ int main(void) {
     printf("Data[%d] = %d\n", i, Data[i]);
   }
 
-  printf("node number: %d - %d = %d\n", N, avoid_count, N - avoid_count);
   bucket_sort(Data, N - avoid_count, l, u, m);
 
   printf("###after sort###\n");
@@ -85,30 +84,12 @@ void bucket_sort(int *A, int n, int l, int u, int m) {
       List[i].next = B[m * A[i] / (u - l) - 1];
       B[m * A[i] / (u - l) - 1] = i;
     }
-    printf("No:%d insert B[m*A[i]/u-l = %d] <- %d\n", i, m * A[i] / (u - l),
-           List[i].key);
   }
 
-  // for debug
-  for (i = 0; i < n; i++) {
-    printf("L[%d] key: %d next: %d\n", i, List[i].key, List[i].next);
-  }
-  for (j = 0; j < m; j++) {
-    i = B[j];
-    printf("B[%d]:\n", j);
-    while (i != -1) {
-      printf("%d ->", List[i].key);
-      i = List[i].next;
-    }
-    printf("\n");
-  }
   for (j = 0; j < m; j++) {
     insertion_sort(List, &B[j]);
   }
 
-  for (i = 0; i < n; i++) {
-    printf("L[%d] key: %d next: %d\n", i, List[i].key, List[i].next);
-  }
   i = 0;
   for (j = 0; j < m; j++) {
     k = B[j];
