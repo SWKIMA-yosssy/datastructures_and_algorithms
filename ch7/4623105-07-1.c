@@ -54,6 +54,7 @@ int main(void) {
     printf("Data[%d] = %d\n", i, Data[i]);
   }
 
+  printf("node number: %d - %d = %d\n", N, avoid_count, N - avoid_count);
   bucket_sort(Data, N - avoid_count, l, u, m);
 
   printf("###after sort###\n");
@@ -77,13 +78,21 @@ void bucket_sort(int *A, int n, int l, int u, int m) {
   }
 
   for (i = 0; i < n; i++) {
-    List[i].next = B[m * A[i] / (u - l)];
-    printf("insert B[m*A[i]/u-l = %d] <- %d\n", B[m * A[i] / (u - l)],
+    if (A[i] != u) {
+      List[i].next = B[m * A[i] / (u - l)];
+      B[m * A[i] / (u - l)] = i;
+    } else { // if A[i] == max range of bucket
+      List[i].next = B[m * A[i] / (u - l) - 1];
+      B[m * A[i] / (u - l) - 1] = i;
+    }
+    printf("No:%d insert B[m*A[i]/u-l = %d] <- %d\n", i, m * A[i] / (u - l),
            List[i].key);
-    B[m * A[i] / (u - l)] = i;
   }
 
   // for debug
+  for (i = 0; i < n; i++) {
+    printf("L[%d] key: %d next: %d\n", i, List[i].key, List[i].next);
+  }
   for (j = 0; j < m; j++) {
     i = B[j];
     printf("B[%d]:\n", j);
@@ -97,6 +106,9 @@ void bucket_sort(int *A, int n, int l, int u, int m) {
     insertion_sort(List, &B[j]);
   }
 
+  for (i = 0; i < n; i++) {
+    printf("L[%d] key: %d next: %d\n", i, List[i].key, List[i].next);
+  }
   i = 0;
   for (j = 0; j < m; j++) {
     k = B[j];
@@ -107,36 +119,27 @@ void bucket_sort(int *A, int n, int l, int u, int m) {
     }
   }
 }
-
 void insertion_sort(struct cell *L, int *n) {
-  int i = *n;
-  int length = 0;
-  int j;
-  int a;
-  while (i != -1) {
-    length++;
-    i = L[i].next;
-  }
-  int *A = (int *)malloc(sizeof(int) * length);
-  j = 0;
-  i = *n;
-  while (i != -1) {
-    A[j] = L[i].key;
-    i = L[i].next;
-    j++;
-  }
+  int sorted = *n;
+  int unsorted = L[*n].next;
+  L[*n].next = -1;
 
-  for (i = 1; i < length; i++) { // insertion sort in form of array
-    a = A[i];
-    j = i - 1;
-    while (j >= 0 && A[j] > a) {
-      A[j + 1] = A[j];
-      j = j - 1;
+  while (unsorted != -1) {
+    int current = unsorted;
+    unsorted = L[unsorted].next;
+
+    if (L[current].key < L[sorted].key) {
+      L[current].next = sorted;
+      sorted = current;
+    } else {
+      int p = sorted;
+      while (L[p].next != -1 && L[L[p].next].key < L[current].key) {
+        p = L[p].next;
+      }
+      L[current].next = L[p].next;
+      L[p].next = current;
     }
-    A[j + 1] = a;
   }
 
-  for (i = 0; i < length; i++) {
-    L[i].key = A[i];
-  }
+  *n = sorted;
 }
