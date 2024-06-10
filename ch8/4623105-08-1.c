@@ -14,6 +14,9 @@ int main(void) {
   char fname[128];
   FILE *fp;
   printf("input filename: ");
+  fgets(fname, sizeof(fname), stdin);
+  fname[strlen(fname) - 1] = '\0';
+  fflush(stdin);
   fp = fopen(fname, "r");
   fscanf(fp, "%d", &N);
   if (N > maxN) {
