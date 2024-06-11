@@ -3,8 +3,8 @@
 #include <string.h>
 #define maxN 50
 
-void quicksort(int *A, int p, int r);
-int partition(int *A, int p, int r);
+void mergesort(int *A, int p, int r);
+void merge(int *A, int p, int q, int r);
 
 int main(void) {
   int Data[maxN];
@@ -33,7 +33,7 @@ int main(void) {
   for (i = 0; i < N; i++) {
     printf("No.%d : %d\n", i, Data[i]);
   }
-  quicksort(Data, 0, N - 1);
+  mergesort(Data, 0, N - 1);
 
   printf("### exec sort ###\n");
   for (i = 0; i < N; i++) {
@@ -42,32 +42,51 @@ int main(void) {
   return 0;
 }
 
-void quicksort(int *A, int p, int r) {
+void mergesort(int *A, int p, int r) {
   if (p < r) {
-    int q = partition(A, p, r);
-    quicksort(A, p, q - 1);
-    quicksort(A, q + 1, r);
+    int q = (p + r) / 2;
+    mergesort(A, p, q);
+    mergesort(A, q + 1, r);
+    merge(A, p, q, r);
   }
 }
-int partition(int *A, int p, int r) {
-  int x = A[p];
+
+void merge(int *A, int p, int q, int r) {
+  int B[maxN];
   int i = p;
-  int j = r;
-  int buf;
+  int j = q + 1;
+  int k = p;
+  int counter = 0;
+
   while (1) {
-    while (A[j] < x) {
-      j--;
-    }
-    while (A[i] > x) {
+    if (A[i] <= A[j]) {
+      B[k] = A[i];
       i++;
-    }
-    if (i < j) {
-      buf = A[i];
-      A[i] = A[j];
-      A[j] = buf;
     } else {
+      B[k] = A[j];
+      j++;
+    }
+    k++;
+    if (i > q || j > r) {
       break;
     }
   }
-  return j;
+
+  if (i <= q) {
+    while (i <= q) {
+      B[k] = A[i];
+      i++;
+      k++;
+    }
+  } else if (j <= r) {
+    while (j <= r) {
+      B[k] = A[j];
+      j++;
+      k++;
+    }
+  }
+
+  for (counter = p; counter <= r; counter++) {
+    A[counter] = B[counter];
+  }
 }
