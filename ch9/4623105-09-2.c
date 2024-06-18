@@ -55,6 +55,10 @@ int main(void) {
     printf("\n");
   } // done initialize v0, N, M,and adj matrix
 
+  bfs(N, d, p, color, v0, &head, &tail, Q);
+  for (i = 0; i < N; i++) {
+    printf("vertex %d: d[%d] = %d, p[%d] = %d\n", i, i, d[i], i, p[i]);
+  }
   return 0;
 }
 
