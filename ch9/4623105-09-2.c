@@ -110,6 +110,9 @@ void bfs(int N, int *d, int *p, int *color, int v0, int *head, int *tail,
   *tail = 0;
 
   enqueue(Q, head, tail, v0);
+  color[v0] = 1;
+  d[v0] = 0;
+  p[v0] = -1;
 
   while (*head != *tail) {
     v = dequeue(Q, head, tail);
