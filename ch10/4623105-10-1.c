@@ -68,6 +68,9 @@ void dijkstra(int G[maxN][maxN], int d[maxN], int p[maxN], int A[maxN], int N) {
   int i;
 
   while (flag_A_empty > 0) {
+    mind = inf;
+    v = -1;
+
     for (i = 0; i < N; i++) {
       if (A[i] == 1) {
         mind = d[i];
@@ -82,9 +85,11 @@ void dijkstra(int G[maxN][maxN], int d[maxN], int p[maxN], int A[maxN], int N) {
         if (d[w] == inf) {
           d[w] = d[v] + G[v][w];
           p[w] = v;
+          A[w] = 1;
         } else if (d[w] > d[v] + G[v][w]) {
           d[w] = d[v] + G[v][w];
           p[w] = v;
+          A[w] = 1;
         }
       }
     }
