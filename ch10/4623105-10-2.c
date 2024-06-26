@@ -63,9 +63,10 @@ int main(void) {
   }
   d[v0] = 0; // initialize and get Dijkstra start
   p[v0] = -1;
+  adr[v0] = v0;
   hsize = 0;
-  insert(Heap, adr, 0, d[v0], v0);
   hsize++;
+  insert(Heap, adr, 0, d[v0], v0);
 
   dijkstra(Lmat, Heap, d, p, adr, N, &hsize);
 
@@ -91,8 +92,8 @@ void dijkstra(int G[maxN][maxN], struct cell *H, int d[maxN], int p[maxN],
         if (d[w] == inf) {
           d[w] = d[v] + G[v][w];
           p[w] = v;
-          insert(H, adr, *hsize, d[w], w);
           *hsize = *hsize + 1;
+          insert(H, adr, *hsize - 1, d[w], w);
         } else if (d[w] > d[v] + G[v][w]) {
           d[w] = d[v] + G[v][w];
           p[w] = v;
@@ -144,18 +145,14 @@ void decrease_key(struct cell *H, int *adr, int i, int a) {
 }
 void upheap_sort(struct cell *H, int *adr, int i) {
   int u = i;
-  int buf;
-  int vertex_buf;
   int adr_buf;
+  struct cell temp;
   while (u > 0 && H[parent(u)].key > H[u].key) {
-    buf = H[parent(u)].key;
-    vertex_buf = H[parent(u)].key;
+    temp = H[parent(u)];
+    H[parent(u)] = H[u];
+    H[u] = temp;
     adr_buf = adr[u];
-    H[parent(u)].key = H[u].key;
-    H[parent(u)].vertex = H[u].vertex;
     adr[parent(u)] = adr[u];
-    H[u].key = buf;
-    H[u].vertex = vertex_buf;
     adr[u] = adr_buf;
     u = parent(u);
   }
@@ -166,6 +163,7 @@ void downheap_sort(struct cell *H, int *adr, int i) {
   int l;
   int r;
   struct cell temp;
+  int adr_buf;
   int flag = 1; // 0:no change 1:change executed;
   while (flag == 1) {
     if (left(u) <= i) {
@@ -183,17 +181,26 @@ void downheap_sort(struct cell *H, int *adr, int i) {
         temp = H[u];
         H[u] = H[r];
         H[r] = temp;
+        adr_buf = adr[u];
+        adr[u] = adr[r];
+        adr[r] = adr_buf;
         u = r;
       } else if (H[r].key > H[l].key) {
         temp = H[u];
         H[u] = H[l];
         H[l] = temp;
+        adr_buf = adr[u];
+        adr[u] = adr[l];
+        adr[l] = adr_buf;
         u = l;
       }
     } else if (H[l].key > H[u].key && H[u].key > H[r].key) {
       temp = H[u];
       H[u] = H[r];
       H[r] = temp;
+      adr_buf = adr[u];
+      adr[u] = adr[r];
+      adr[r] = adr_buf;
       u = r;
     } else {
       flag = 0;
