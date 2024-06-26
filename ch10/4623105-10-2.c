@@ -87,7 +87,7 @@ void dijkstra(int G[maxN][maxN], struct cell *H, int d[maxN], int p[maxN],
     v = delete_min(H, adr, *hsize); // delete node which has minimam d among A
     *hsize = *hsize - 1;
     for (i = 0; i < N; i++) {
-      if (G[v][i] != inf) {
+      if (G[v][i] < inf) {
         w = i;
         if (d[w] == inf) {
           d[w] = d[v] + G[v][w];
@@ -104,28 +104,15 @@ void dijkstra(int G[maxN][maxN], struct cell *H, int d[maxN], int p[maxN],
   }
 }
 
-int parent(int i) {
-  int p;
-  p = (i - 1) / 2;
-  return p;
-}
-
-int right(int i) {
-  int r;
-  r = 2 * i + 2;
-  return r;
-}
-int left(int i) {
-  int l;
-  l = 2 * i + 1;
-  return l;
-}
+int parent(int i) { return (i - 1) / 2; }
+int right(int i) { return 2 * i + 2; }
+int left(int i) { return 2 * i + 1; }
 
 void insert(struct cell *H, int *adr, int i, int a, int v) {
   H[i].key = a;
   H[i].vertex = v;
   adr[i] = v;
-  upheap_sort(H, adr, i);
+  upheap_sort(H, adr, i - 1);
 }
 
 int delete_min(struct cell *H, int *adr, int i) {
@@ -141,7 +128,7 @@ int delete_min(struct cell *H, int *adr, int i) {
 }
 void decrease_key(struct cell *H, int *adr, int i, int a) {
   H[i].key = a;
-  upheap_sort(H, adr, i);
+  upheap_sort(H, adr, i - 1);
 }
 void upheap_sort(struct cell *H, int *adr, int i) {
   int u = i;
