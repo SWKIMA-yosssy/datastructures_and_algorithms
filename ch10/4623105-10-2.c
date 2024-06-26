@@ -165,9 +165,7 @@ void downheap_sort(struct cell *H, int *adr, int i) {
   int u = 0;
   int l;
   int r;
-  int buf;
-  int vertex_buf;
-  int adr_buf;
+  struct cell temp;
   int flag = 1; // 0:no change 1:change executed;
   while (flag == 1) {
     if (left(u) <= i) {
@@ -182,39 +180,20 @@ void downheap_sort(struct cell *H, int *adr, int i) {
     }
     if (H[u].key > H[l].key) {
       if (H[l].key > H[r].key) {
-        buf = H[u].key;
-        H[u].key = H[r].key;
-        H[r].key = buf;
-        vertex_buf = H[u].vertex;
-        H[u].vertex = H[r].vertex;
-        H[r].vertex = vertex_buf;
-        adr_buf = adr[u];
-        adr[u] = adr[r];
-        adr[r] = adr_buf;
+        temp = H[u];
+        H[u] = H[r];
+        H[r] = temp;
         u = r;
       } else if (H[r].key > H[l].key) {
-        buf = H[u].key;
-        H[u].key = H[l].key;
-        H[l].key = buf;
-        u = l;
-        vertex_buf = H[u].vertex;
-        H[u].vertex = H[l].vertex;
-        H[l].vertex = vertex_buf;
-        adr_buf = adr[u];
-        adr[u] = adr[l];
-        adr[l] = adr_buf;
+        temp = H[u];
+        H[u] = H[l];
+        H[l] = temp;
         u = l;
       }
     } else if (H[l].key > H[u].key && H[u].key > H[r].key) {
-      buf = H[u].key;
-      H[u].key = H[r].key;
-      H[r].key = buf;
-      vertex_buf = H[u].vertex;
-      H[u].vertex = H[r].vertex;
-      H[r].vertex = vertex_buf;
-      adr_buf = adr[u];
-      adr[u] = adr[r];
-      adr[r] = adr_buf;
+      temp = H[u];
+      H[u] = H[r];
+      H[r] = temp;
       u = r;
     } else {
       flag = 0;
