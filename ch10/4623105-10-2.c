@@ -70,7 +70,7 @@ int main(void) {
   dijkstra(Lmat, Heap, d, p, adr, N, &hsize);
 
   for (i = 0; i < N; i++) { // output outcome
-    printf("vertex 0: d[%d] = %d, p[%d] = %d\n", i, d[i], i, p[i]);
+    printf("vertex %d: d[%d] = %d, p[%d] = %d\n", i, i, d[i], i, p[i]);
   }
   return 0;
 }
@@ -92,6 +92,7 @@ void dijkstra(int G[maxN][maxN], struct cell *H, int d[maxN], int p[maxN],
           d[w] = d[v] + G[v][w];
           p[w] = v;
           insert(H, adr, *hsize, d[w], w);
+          *hsize = *hsize + 1;
         } else if (d[w] > d[v] + G[v][w]) {
           d[w] = d[v] + G[v][w];
           p[w] = v;

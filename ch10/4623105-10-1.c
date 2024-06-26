@@ -55,7 +55,7 @@ int main(void) {
   dijkstra(G, d, p, A, N);
 
   for (i = 0; i < N; i++) { // output outcome
-    printf("vertex 0: d[%d] = %d, p[%d] = %d\n", i, d[i], i, p[i]);
+    printf("vertex %d: d[%d] = %d, p[%d] = %d\n", i, i, d[i], i, p[i]);
   }
   return 0;
 }
