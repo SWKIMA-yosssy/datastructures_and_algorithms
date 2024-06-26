@@ -70,6 +70,9 @@ int main(void) {
 
   dijkstra(Lmat, Heap, d, p, adr, N, &hsize);
 
+  for (j = 0; j < N; j++) {
+    printf("adr[%d] = %d\n", j, adr[j]);
+  }
   for (i = 0; i < N; i++) { // output outcome
     printf("vertex %d: d[%d] = %d, p[%d] = %d\n", i, i, d[i], i, p[i]);
   }
@@ -81,23 +84,37 @@ void dijkstra(int G[maxN][maxN], struct cell *H, int d[maxN], int p[maxN],
   int v;
   int w;
   int i;
+  int j; // for debug
 
   while (*hsize > 0) {
 
     v = delete_min(H, adr, *hsize); // delete node which has minimam d among A
     *hsize = *hsize - 1;
+    for (j = 0; j < N; j++) {
+      printf("%d ", adr[j]);
+    }
+    printf(":hsize=%d\n", *hsize);
     for (i = 0; i < N; i++) {
       if (G[v][i] < inf) {
         w = i;
+        // printf("Dijkstra:G[%d][%d] d[%d] == %d\n", v, i, w, d[w]);
         if (d[w] == inf) {
           d[w] = d[v] + G[v][w];
           p[w] = v;
           *hsize = *hsize + 1;
           insert(H, adr, *hsize - 1, d[w], w);
+          for (j = 0; j < N; j++) {
+            printf("%d ", adr[j]);
+          }
+          printf(":hsize=%d\n", *hsize);
         } else if (d[w] > d[v] + G[v][w]) {
           d[w] = d[v] + G[v][w];
           p[w] = v;
           decrease_key(H, adr, w, d[w]);
+          for (j = 0; j < N; j++) {
+            printf("%d ", adr[j]);
+          }
+          printf(":hsize=%d\n", *hsize);
         }
       }
     }
@@ -111,7 +128,7 @@ int left(int i) { return 2 * i + 1; }
 void insert(struct cell *H, int *adr, int i, int a, int v) {
   H[i].key = a;
   H[i].vertex = v;
-  adr[i] = v;
+  adr[v] = i;
   upheap_sort(H, adr, i - 1);
 }
 
@@ -139,8 +156,8 @@ void upheap_sort(struct cell *H, int *adr, int i) {
     H[parent(u)] = H[u];
     H[u] = temp;
     adr_buf = adr[u];
-    adr[parent(u)] = adr[u];
-    adr[u] = adr_buf;
+    adr[u] = adr[parent(u)];
+    adr[parent(u)] = adr_buf;
     u = parent(u);
   }
 }
