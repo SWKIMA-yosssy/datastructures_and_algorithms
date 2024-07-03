@@ -9,7 +9,6 @@ int main(void) {
   int p[maxN + 1];
   int m[maxN + 1][maxN + 1], s[maxN + 1][maxN + 1];
   int i, j, l, k;
-  int buf_min;
 
   char fname[128];
   FILE *fp;
@@ -25,11 +24,11 @@ int main(void) {
     exit(1);
   }
 
-  for (i = 1; i <= N; i++) { // initialize Lmat
+  for (i = 0; i <= N; i++) { // initialize Lmat
     fscanf(fp, " %d", &p[i]);
   }
   fclose(fp);
-  for (i = 0; i < N; i++) {
+  for (i = 1; i < N; i++) {
     printf("matrix %2d:(%d, %d)\n", i, p[i - 1], p[i]);
   }
 
@@ -39,18 +38,30 @@ int main(void) {
   for (l = 2; l <= N; l++) {
     for (i = 1; i <= N - l + 1; i++) {
       j = i + l - 1;
-      buf_min = inf;
+      m[i][j] = inf;
       for (k = i; k <= j - 1; k++) {
-        if (buf_min > m[j][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j]) {
-          buf_min = m[j][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j];
+        if (m[i][j] > m[j][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j]) {
+          m[i][j] = m[j][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j];
           s[i][j] = k;
         }
       }
-      m[i][j] = buf_min;
     }
   }
 
   printf("m-values:\n");
+  for (i = 1; i <= N; i++) {
+    printf(" %2d", i);
+    if (i > 1) {
+      for (j = 1; j < i; j++) {
+        printf("      ");
+      }
+    }
+    for (j = i; j <= N; j++) {
+      printf(" %5d", m[i][j]);
+    }
+    printf("\n");
+  }
+  printf("s-values:\n");
   for (i = 1; i <= N; i++) {
     printf(" %2d", i);
     for (j = 1; j <= i; j++) {
