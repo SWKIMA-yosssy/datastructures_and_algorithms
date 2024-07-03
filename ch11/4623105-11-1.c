@@ -27,7 +27,11 @@ int main(void) {
 
   for (i = 1; i <= N; i++) { // initialize Lmat
     for (j = 1; j <= N; j++) {
-      Lmat[i][j] = inf;
+      if (i != j) {
+        Lmat[i][j] = inf;
+      } else {
+        Lmat[i][j] = 0;
+      }
     }
   }
   for (i = 0; i < M; i++) {
@@ -37,8 +41,8 @@ int main(void) {
   fclose(fp);
 
   k = 0;
-  for (u = 0; u < N; u++) {
-    for (v = 0; v < N; v++) {
+  for (u = 1; u <= N; u++) {
+    for (v = 1; v <= N; v++) {
       d[k][u][v] = Lmat[u][v];
     }
   }
@@ -57,9 +61,39 @@ int main(void) {
       } else {
         printf(" --");
       }
+    }
+    printf("\n");
+  }
+
+  for (k = 1; k <= N; k++) {
+    for (i = 1; i <= N; i++) {
+      d[k][i][i] = 0;
+      for (j = i + 1; j <= N; j++) {
+        if (d[k - 1][i][k] + d[k - 1][k][j] >= d[k - 1][i][j]) {
+          d[k][i][j] = d[k - 1][i][j];
+        } else {
+          d[k][i][j] = d[k - 1][i][k] + d[k - 1][k][j];
+        }
+      }
+    }
+
+    printf("k=%d\n", k);
+    for (u = 1; u <= N; u++) {
+      printf(" %2d:", u);
+      if (u > 1) {
+        for (v = 1; v < u; v++) {
+          printf("   ");
+        }
+      }
+      for (v = u; v <= N; v++) {
+        if (d[k][u][v] != inf) {
+          printf(" %2d", d[k][u][v]);
+        } else {
+          printf(" --");
+        }
+      }
       printf("\n");
     }
   }
-
   return 0;
 }
