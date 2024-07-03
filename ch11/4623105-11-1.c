@@ -37,6 +37,7 @@ int main(void) {
   for (i = 0; i < M; i++) {
     fscanf(fp, " %d %d %d", &u, &v, &len);
     Lmat[u][v] = len;
+    Lmat[v][u] = len;
   }
   fclose(fp);
 
@@ -68,11 +69,17 @@ int main(void) {
   for (k = 1; k <= N; k++) {
     for (i = 1; i <= N; i++) {
       d[k][i][i] = 0;
-      for (j = i + 1; j <= N; j++) {
-        if (d[k - 1][i][k] + d[k - 1][k][j] >= d[k - 1][i][j]) {
-          d[k][i][j] = d[k - 1][i][j];
-        } else {
+      for (j = i; j <= N; j++) {
+        if (i > k) {
+          d[k - 1][i][k] = d[k - 1][k][i];
+        }
+        if (k > j) {
+          d[k - 1][k][j] = d[k - 1][j][k];
+        }
+        if (d[k - 1][i][k] + d[k - 1][k][j] < d[k - 1][i][j]) {
           d[k][i][j] = d[k - 1][i][k] + d[k - 1][k][j];
+        } else {
+          d[k][i][j] = d[k - 1][i][j];
         }
       }
     }
