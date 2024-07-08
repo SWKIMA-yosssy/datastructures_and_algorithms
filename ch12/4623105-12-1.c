@@ -25,7 +25,7 @@ int main(void) {
   char fname[128];
   FILE *fp;
 
-  printf("input filename: ");
+  printf("input filename:");
   fgets(fname, sizeof(fname), stdin);
   fname[strlen(fname) - 1] = '\0';
   fflush(stdin);
