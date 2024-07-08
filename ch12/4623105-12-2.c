@@ -70,10 +70,10 @@ int partition(int *A, int *ednum, int p, int r) {
   int j = r;
   int buf;
   while (1) {
-    while (A[j] < x) {
+    while (A[j] > x) {
       j--;
     }
-    while (A[i] > x) {
+    while (A[i] < x) {
       i++;
     }
     if (i < j) {
