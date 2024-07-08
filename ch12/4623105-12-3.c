@@ -148,9 +148,10 @@ void kruskal(int n, int m, struct edge_data *edge, int *p, int *rank,
   for (u = 0; u < n; u++) {
     make_set(p, rank, u);
   }
-  for (i = 1; i < m; i++) {
+  for (i = 0; i < m; i++) {
     u = edge[ednum[i]].end1;
     v = edge[ednum[i]].end2;
-    T[i] = set_union(p, rank, u, v);
+    T[ednum[i]] = set_union(p, rank, u, v);
+    printf("Debug: u=%d v=%d, T[%d] = %d\n", u, v, i, T[ednum[i]]);
   }
 }
